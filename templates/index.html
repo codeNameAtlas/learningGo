@@ -1,9 +1,9 @@
 <html>
   <head></head>
   <body>
-    <form id="search-form">
+    <form id="search-form" onsubmit="return false">
       <input name="search" />
-      <input type="submit" value="Search">
+      <input type="submit" value="Search" onclick="submitSearch()" />
     </form>
 
     <table width="100%">
@@ -15,13 +15,12 @@
           <th width="20%">ID</th>
         </tr>
       </thead>
-      <tbody id="serach-results">
+      <tbody id="search-results">
       </tbody>
     </table>
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
-      //write a submit search function
       function submitSearch() {
         $.ajax({
           url: "/search",
@@ -31,9 +30,17 @@
             var parsed = JSON.parse(rawData);
             if (!parsed) return;
 
-            var searchResults =
+            var searchResults = $("#search-results");
+            searchResults.empty();
+
+            parsed.forEach(function(result) {
+              var row = $("<tr><td>" + result.Title + "</td><td>" + result.Author + "</td><td>" + result.Year +  "</td><td>" + result.ID + "</td></tr>");
+              searchResults.append(row);
+            });
           }
-        })
+        });
+
+        return false;
       }
     </script>
   </body>
